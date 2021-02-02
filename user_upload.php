@@ -56,5 +56,19 @@
 		}	
 		pg_close($db);
 	}
+	
+	function insert($fname, $lname, $email){
+		global $db;
+		$query =
+			"INSERT INTO USERS (NAME, SURNAME, EMAIL)
+			VALUES (E'$fname', E'$lname', E'$email')";
+
+		if (@pg_query($db, $query) == False){
+			return False;
+		}
+		else{
+			return True;
+		}
+	}
 
 ?>
