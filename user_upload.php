@@ -160,5 +160,195 @@
 			echo "Could not open file: $file\n";
 		}
 	}
+	
+	//Validates Syntax, and calls necessary functions
+	function main() {
+		global $host, $user, $password, $file, $db;
+		$arguments = $_SERVER['argv'];
+		$validation = array(-1, -1, -1, -1, -1, -1, -1);
+		$size = sizeof($arguments);
+		for($x = 1; $x < $size; $x++){
+			switch($arguments[$x]){
+				case "--file":
+					if($validation[0] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						if($x + 1 < $size){
+							$temp = $arguments[$x+1];
+							if($temp == "--file" && $temp == "--create_table" && $temp == "--dry_run" && $temp == "-u" && $temp == "-p" && $temp == "-h"){
+								echo "Invalid Syntax! - Incomplete Argument!\n\n";
+								help();
+								return;
+							}
+						}
+						else{
+							echo "Invalid Syntax! - Incomplete Argument!\n\n";
+							help();
+							return;
+						}
+						$validation[0] = $x;
+					}
+					break;
+				case "--create_table":
+					if($validation[1] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						$validation[1] = $x;
+					}
+					break;
+				case "--dry_run":
+					if($validation[2] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						$validation[2] = $x;
+					}
+					break;
+				case "-u":
+					if($validation[3] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						if($x + 1 < $size){
+							$temp = $arguments[$x+1];
+							if($temp == "--file" && $temp == "--create_table" && $temp == "--dry_run" && $temp == "-u" && $temp == "-p" && $temp == "-h"){
+								echo "Invalid Syntax! - Incomplete Argument!\n\n";
+								help();
+								return;
+							}
+						}
+						else{
+							echo "Invalid Syntax! - Incomplete Argument!\n\n";
+							help();
+							return;
+						}
+						$validation[3] = $x;
+					}
+					break;
+				case "-p":
+					if($validation[4] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						if($x + 1 < $size){
+							$temp = $arguments[$x+1];
+							if($temp == "--file" && $temp == "--create_table" && $temp == "--dry_run" && $temp == "-u" && $temp == "-p" && $temp == "-h"){
+								echo "Invalid Syntax! - Incomplete Argument!\n\n";
+								help();
+								return;
+							}
+						}
+						else{
+							echo "Invalid Syntax! - Incomplete Argument!\n\n";
+							help();
+							return;
+						}
+						$validation[4] = $x;
+					}
+					break;
+				case "-h":
+					if($validation[5] != -1){
+						echo "Invalid Syntax! - Duplicated Argument!\n\n";
+						help();
+						return;
+					}
+					else{
+						if($x + 1 < $size){
+							$temp = $arguments[$x+1];
+							if($temp == "--file" && $temp == "--create_table" && $temp == "--dry_run" && $temp == "-u" && $temp == "-p" && $temp == "-h"){
+								echo "Invalid Syntax! - Incomplete Argument!\n\n";
+								help();
+								return;
+							}
+						}
+						else{
+							echo "Invalid Syntax! - Incomplete Argument!\n\n";
+							help();
+							return;
+						}
+						$validation[5] = $x;
+					}
+					break;
+				case "--help":
+					if($x != 1 || $size > 2){
+						echo "Invalid Syntax!\n\n";
+					}
+					help();
+					return;
+					break;
+				default:
+					if(substr($arguments[$x], 0, 1) == "-"){
+						echo "Invalid Syntax!\n\n";
+						help();
+						return;
+					}
+					$temp = $arguments[$x-1];
+					if($temp != "--file" && $temp != "-u" && $temp != "-p" && $temp != "-h"){
+						echo "Invalid Syntax!\n\n";
+						help();
+						return;
+					}
+					break;
+			}
+		}
+		if($validation[2] != -1){
+			if($validation[1] != -1){
+				echo "Invalid Syntax - Incompatible Arguments!\n\n";
+				help();
+				return;
+			}
+			else{
+				if($validation[0] != -1){
+					$file = $arguments[$validation[0]+1];
+				}
+				database(True);
+			}
+		}
+		else{
+			if($validation[3] != -1){
+				if($validation[4] != -1){
+					$user = $arguments[$validation[3]+1];
+					$password = $arguments[$validation[4]+1];
+					if($validation[5] != -1){
+						$host = $arguments[$validation[5]+1];
+					}
+					if($validation[0] != -1){
+						$file = $arguments[$validation[0]+1];
+					}
+					connect();
+					if($validation[1] != -1){
+						if($db){
+							table(True);
+						}
+					}
+					else{
+						database(False);
+					}
+				}
+				else{
+					echo "Invalid Syntax! - A password is required!\n\n";
+					help();
+					return;
+				}
+			}
+			else{
+				echo "Invalid Syntax! - A username is required!\n\n";
+				help();
+				return;
+			}
+		}
+	}
 
 ?>
