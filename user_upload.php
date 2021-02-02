@@ -32,5 +32,29 @@
 			echo "Connection to database failed with parameters $host|$user|$password\n\n";
 		}
 	}
+	
+	//function for creating table, for normal running and --create_table
+	function table($rebuild){
+		global $db;
+		
+		if($rebuild){
+			pg_query($db, "DROP TABLE IF EXISTS USERS");
+		}
+		
+		$table =
+		"CREATE TABLE IF NOT EXISTS USERS	
+			(NAME		TEXT    NOT NULL,
+			SURNAME		TEXT	NOT NULL,
+			EMAIL	TEXT	PRIMARY KEY	NOT NULL)";
+
+		$test = pg_query($db, $table);
+		if(!$test){
+			echo pg_last_error($db);
+		}
+		else{
+			echo "Table Users Successful!\n";
+		}	
+		pg_close($db);
+	}
 
 ?>
