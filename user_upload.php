@@ -20,5 +20,17 @@
 			\n\n**Order of arguments is not important!
 			\n";
 	}
+	
+	//connect to database
+	function connect(){
+		global $host, $user, $password, $db;
+		$db = @pg_connect("host=$host user=$user password=$password");
+		if($db){
+			echo "Connected to Database!\n\n";
+		}
+		else{
+			echo "Connection to database failed with parameters $host|$user|$password\n\n";
+		}
+	}
 
 ?>
